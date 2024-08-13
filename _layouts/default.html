@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="cs">
+	<head>
+		<meta charset="utf-8" />
+		<title>{{ page.title }}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		{% include base/styles.html %}
+		{% include base/scripts.html %}
+	</head>
+	<body data-spy="scroll" data-target="#navbar" data-offset="10">
+		<div id="background"></div>
+		{% include base/nav.html %}
+		{{ content }}
+		{% include base/footer.html %}
+	</body>
+</html>

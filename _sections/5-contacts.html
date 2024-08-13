@@ -1,0 +1,121 @@
+---
+unicode: AÁBCČDĎEÉĚFGHChIÍJKLMNŇOÓPQRŘSŠTŤUÚŮVWXYÝZŽ
+layout:  section/row
+title:   Kontakty
+name:    contacts
+---
+
+<div class="col-lg-6">
+	<form class="card mb-4" id="contact" method="POST" action="https://vostry.xf.cz/script/send.php">
+		<h4 class="card-header">Kontakt</h4>
+		<div class="card-body">
+			<div class="" role="alert" id="result"></div>
+			<div class="input-group mb-1">
+				<div class="input-group-prepend">
+					<div class="input-group-text">
+						<i class="fa-solid fa-user"></i>
+					</div>
+				</div>
+				<input type="text" class="form-control" name="name" value="{% if jekyll.environment == 'development' %}jmeno{% endif %}" placeholder="Jméno" required>
+			</div>
+			<div class="input-group mb-1">
+				<div class="input-group-prepend">
+					<div class="input-group-text">
+						<i class="fa-solid fa-at"></i>
+					</div>
+				</div>
+				<input type="email" class="form-control" name="email" value="{% if jekyll.environment == 'development' %}e@mail.cz{% endif %}" placeholder="Email" required>
+			</div>
+			<div class="input-group mb-1">
+				<div class="input-group-prepend">
+					<div class="input-group-text">
+						<i class="fa-solid fa-pen"></i>
+					</div>
+				</div>
+				<input type="text" class="form-control" name="subject" value="{% if jekyll.environment == 'development' %}predmet{% endif %}" placeholder="Předmět" required>
+			</div>
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<div class="input-group-text">
+						<i class="fa-solid fa-message"></i>
+					</div>
+				</div>
+				<textarea class="form-control" name="message" placeholder="Zpráva" rows="11" required>{% if jekyll.environment == 'development' %}zprava{% endif %}</textarea>
+			</div>
+		</div>
+		<div class="card-footer text-right">
+			<input type="hidden" name="website" value="{{ site.github.repository_name }}"/>
+			<button type="submit" id="submit" class="btn btn-primary">
+				<i class="fa-solid fa-paper-plane"></i>
+				Odeslat
+			</button>
+		</div>
+	</form>
+</div>
+
+<script>
+	$('#contact').submit(event => {
+		event.preventDefault();
+		
+		function toast(color, text) {
+			$('#result').removeClass();
+			$('#result').addClass('alert');
+			$('#result').addClass('alert-' + color);
+			$('#result').text(text);
+		}
+		
+		var objectData = {};
+		$('#contact').serializeArray().forEach(pair => objectData[pair.name] = pair.value);
+		
+		$.ajax({
+			crossDomain: true,
+			url: $('#contact').attr('action'),
+			type: $('#contact').attr('method'),
+			data: objectData,
+			dataType: 'json',
+			beforeSend(xhr, settings) {
+				console.log('before', xhr, settings);
+				$('#submit').prop('disabled', true);
+				$('#result').slideUp('slow');
+			},
+			success(data, status, xhr) {
+				console.log('success', data, status, xhr);
+				if (data === 'OK') {
+					toast('success', 'Formulář byl úspěšně odeslán.');
+				} else {
+					toast('danger', 'Formulář se nepodařilo odeslat.');
+				}
+			},
+			error(xhr, status, error) {
+				console.log('error', xhr, status, error);
+				toast('danger', 'Formulář se nepodařilo odeslat.');
+			},
+			complete(xhr, status) {
+				console.log('complete', xhr, status);
+				$('#submit').prop('disabled', false);
+				$('#result').slideDown('slow');
+			},
+		});
+	});
+</script>
+
+<div class="col-lg-6">
+	<article class="card mb-4">
+		<h4 class="card-header">Kde mne najdete</h4>
+		<div class="card-body">
+			<li class="list-group-item">Email: <a href="mailto:{{ site.data.contacts.email }}">{{ site.data.contacts.email }}</a></li>
+			<li class="list-group-item">LinkedIn: <a href="https://cz.linkedin.com/in/{{ site.data.contacts.linkedin | url_encode }}">{{ site.data.contacts.linkedin }}</a></li>
+		</div>
+	</article>
+	<article class="card mb-4">
+		<h4 class="card-header">Můj PGP klíč</h4>
+		<div class="card-body">
+			<a href="{{ '/assets/pgpkey/' | absolute_url | append: site.data.contacts.pgphash.short | append: '.asc' }}">
+				<img class="img-fluid" src="{{ '/assets/logo/gnupg.svg' | absolute_url }}" alt="GnuPG logo" />
+			</a>
+		</div>
+		<div class="card-footer text-muted text-center">
+			<code>{{ site.data.contacts.pgphash.long | replace: '-', '&nbsp;' | replace: '/', ' ' }}</code>
+		</div>
+	</article>
+</div>

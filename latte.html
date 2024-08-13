@@ -1,0 +1,11 @@
+---
+unicode: AÁBCČDĎEÉĚFGHChIÍJKLMNŇOÓPQRŘSŠTŤUÚŮVWXYÝZŽ
+layout:  default
+title:   Jan Vostrý
+---
+
+{% for section in site.sections %}
+	{% if section.name == 'none' %}
+		{{ section }}
+	{% endif %}
+{% endfor %}

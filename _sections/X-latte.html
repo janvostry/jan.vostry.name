@@ -1,0 +1,75 @@
+---
+unicode: AÁBCČDĎEÉĚFGHChIÍJKLMNŇOÓPQRŘSŠTŤUÚŮVWXYÝZŽ
+layout:  section/bare
+title:   None
+name:    none
+---
+
+{% capture latte %}
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    \section(Zaměstnání){% for experience in site.data.experiences %}
+        \starttable(S|X)
+            \hfill \multirow(2)(*)(\makecell[r](Od: {{ experience.start }} \\ Do: {{ experience.stop }}))
+                & \textbf({{ experience.position }}) pro firmu \textbf({{ experience.employer }}){% if experience.taxid %}, \emph(IČ: {{ experience.taxid }}){% endif %} \\
+                & \emph(\footnotesize({{ experience.contract }})) \\
+                & \footnotesize({{ experience.service }}) \\
+        \end(tabularx){% if forloop.last == false %}
+        \skiptable{% endif %}{% endfor %}
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    {% for group in site.data.groups %}
+    \section({% if group.name != 'other' %}Projekty pro \textbf({% endif %}{{ group.title }}{% if group.name != 'other' %}){% endif %}){% assign first = true %}{% for reference in site.data.references %}{% if reference.group == group.name %}{% if first %}{% assign first = false %}{% else %}
+        \skiptable{% endif %}
+        \starttable(S|X)
+            \hfill {{ reference.date }}
+                & \textbf({{ reference.title }}), \emph(\href({{ reference.link }})({{ reference.link }})) \\
+                & \footnotesize({{ reference.desc }}) \\
+                & \footnotesize(\emph({{ reference.tech | replace: '#', '\#' }})) \\
+        \end(tabularx){% endif %}{% endfor %}
+    {% endfor %}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    \section(Dovednosti){% for skill in site.data.skills %}
+        \starttable(SSX)
+            \hfill {{ skill.title }}:
+                & \hfill Pokročilý:  & {% for item in skill.high %}{{ item | replace: '#', '\#' }}{% if forloop.last == false %}, {% endif %}{% endfor %} \\
+                & \hfill Středně pokročilý: & {% for item in skill.medium %}{{ item | replace: '#', '\#' }}{% if forloop.last == false %}, {% endif %}{% endfor %} \\
+                & \hfill Začátečník: & {% for item in skill.low %}{{ item | replace: '#', '\#' }}{% if forloop.last == false %}, {% endif %}{% endfor %} \\
+        \end(tabularx)
+        \skiptable{% endfor %}
+        \starttable(SSX)
+            \hfill Jazyky:
+                & \hfill Čeština: & Mateřský jazyk \\
+                & \hfill Angličtina: & Čtení technické dokumentace, psaná komunikace \\
+        \end(tabularx)
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+{% endcapture %}
+
+<div class="row">
+	<div class="col">
+		<article class="card">
+			{% if jekyll.environment == 'development' %}
+				<div class="card-body">
+					<code>{{
+						latte
+						| replace: '(', '&#123;'
+						| replace: ')', '&#125;'
+						| replace: ' ', '&nbsp;'
+						| newline_to_br
+					}}</code>
+				</div>
+			{% else %}
+				<div class="card-body" id="latte">
+				</div>
+			{% endif %}
+		</article>
+	</div>
+</div>

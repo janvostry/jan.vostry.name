@@ -1,0 +1,162 @@
+---
+---
+
+@import 'bootstrap/_functions.scss';
+@import 'bootstrap/_variables.scss';
+
+$small-shadow-size: 15px;
+$large-shadow-size: 30px;
+
+@mixin NormalFixedBackground()
+{
+	background-size: cover;
+	background-image: url({{ '/assets/background/sharp.jpg' | absolute_url }});
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+@mixin BlurredFixedBackground()
+{
+	backdrop-filter: blur(8px);
+	background-color: RGBA(255, 255, 255, .8);
+}
+
+@mixin WidthStretch()
+{
+	width: 100%;
+	border-radius: unset !important;
+	border-left: none !important;
+	border-right: none !important;
+}
+
+@mixin TopmostShadow()
+{
+	box-shadow: 0 0 ($small-shadow-size) -($small-shadow-size / 2) RGBA(0, 0, 0, .25);
+}
+
+@mixin NavbarMargin()
+{
+	&:before
+	{
+		height: 3.5rem + map-get($spacers, 3); // 56px + spacer
+		content: "";
+		display:block;
+	}
+}
+
+*
+{
+	font-family: 'Source Code Pro', monospace;
+}
+
+html
+{
+	scroll-behavior: smooth;
+}
+
+body
+{
+	#background {
+		@include NormalFixedBackground();
+		background-attachment: unset;
+		
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
+		
+		z-index: -1;
+	}
+	
+	>nav
+	{
+		@include BlurredFixedBackground();
+		@include TopmostShadow();
+		
+		.nav-link
+		{
+			padding: 0.5rem !important;
+		}
+		
+		.nav-link.active
+		{
+			color: #fff !important;
+		}
+	}
+	
+	>header
+	{
+		width: 100%;
+		height: 100vh;
+		
+		@include NavbarMargin();
+		
+		.card
+		{
+			box-shadow: 0 0 ($large-shadow-size) -($large-shadow-size / 2) RGBA(0, 0, 0, .25);
+			
+			@include BlurredFixedBackground();
+			@include WidthStretch();
+		}
+	}
+	
+	>.container,
+	>.container-fluid
+	{
+		>section
+		{
+			@include NavbarMargin();
+			
+			.card
+			{
+				box-shadow: 0 0 ($large-shadow-size) -($large-shadow-size / 2) RGBA(0, 0, 0, .25);
+				
+				border: 1px solid RGBA(0,0,0,.25);
+				border-radius: 0.5rem;
+				
+				@include BlurredFixedBackground();
+				
+				>.card-img-top
+				{
+					border-bottom: 1px solid transparent;
+					box-shadow: 0 0 ($small-shadow-size) -($small-shadow-size / 2) 0 RGBA(0, 0, 0, .25);
+				}
+				
+				.badges
+				{
+					margin: -0.25em 0;
+				}
+				
+				.badge
+				{
+					font-size: 1rem;
+					margin: 0.25em 0;
+				}
+				
+				#latte
+				{
+					background-image: url({{ '/assets/image/latte.svg' | absolute_url }});
+					background-position: 50% 50%;
+					background-size: 50% 100%;
+					background-repeat: no-repeat;
+					padding-top: 50%;
+				}
+			}
+		}
+	}
+	
+	>footer
+	{
+		@include NavbarMargin();
+		
+		.card
+		{
+			@include BlurredFixedBackground();
+			@include TopmostShadow();
+			@include WidthStretch();
+		}
+	}
+}
+
+.fa-solid {
+	width: 1.5em;
+}
